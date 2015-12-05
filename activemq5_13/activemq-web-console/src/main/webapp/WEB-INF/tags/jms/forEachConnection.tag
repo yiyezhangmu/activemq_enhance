@@ -14,22 +14,41 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 --%>
-<%@ attribute name="connection" type="java.lang.String" required="true"  %>
-<%@ attribute name="connectionName" type="java.lang.String" required="true"  %>
-<%@ attribute name="broker" type="org.apache.activemq.web.BrokerFacade" required="true"  %>
-<%@ attribute name="connectorName" type="java.lang.String" required="true"  %>
-<%@ tag import="java.util.Iterator" %>
-<%@ tag import="org.apache.activemq.broker.jmx.ConnectionViewMBean" %>
+<%@tag import="org.apache.activemq.web.query.PageUtil"%>
+<%@tag import="org.apache.activemq.web.query.PageInfo"%>
+<%@tag import="java.util.ArrayList"%>
+<%@tag import="java.util.List"%>
+<%@ attribute name="connection" type="java.lang.String" required="true"%>
+<%@ attribute name="connectionName" type="java.lang.String"
+	required="true"%>
+<%@ attribute name="broker" type="org.apache.activemq.web.BrokerFacade"
+	required="true"%>
+<%@ attribute name="connectorName" type="java.lang.String"
+	required="true"%>
+<%@ tag import="java.util.Iterator"%>
+<%@ tag import="org.apache.activemq.broker.jmx.ConnectionViewMBean"%>
 <%
 	Iterator it = broker.getConnections(connectorName).iterator();
+	List<Object[]> list = new ArrayList<Object[]>();
 	while (it.hasNext()) {
+		Object[] objects = new Object[2];
 		String conName = (String) it.next();
 		ConnectionViewMBean con = broker.getConnection(conName);
-		request.setAttribute(connectionName, conName);
-		request.setAttribute(connection, con);
+		objects[0] = conName;
+		objects[1] = con;
+		list.add(objects);
+	}
+	if (list.size() > 0) {
+		PageInfo pageInfo = PageUtil.getPageInfoForList(list, request);
+		request.setAttribute("pageInfo", pageInfo);
+		for (int i = pageInfo.getStart(); i < pageInfo.getEnd(); i++) {
+
+			request.setAttribute(connectionName, list.get(i)[0]);
+			request.setAttribute(connection, list.get(i)[1]);
 %>
-<jsp:doBody/>
+<jsp:doBody />
 <%
 	}
-%>       
-    
+	}
+%>
+

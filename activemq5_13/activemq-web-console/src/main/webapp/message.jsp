@@ -14,6 +14,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
+
 <html>
 <head>
 <c:set var="row" value="${requestContext.messageQuery.message}"/>
@@ -22,20 +24,14 @@
 <%@include file="decorators/head.jsp" %>
 </head>
 <body>
-
 <%@include file="decorators/header.jsp" %>
-
 <c:choose>
 <c:when test="${empty row}">
-
 <div>
 No message could be found for ID <c:out value="${requestContext.messageQuery.id}"/>
 </div>
-
 </c:when>
-
 <c:otherwise>
-
 <table class="layout">
     <tr>
         <td class="layout"  valign="top">
@@ -43,7 +39,7 @@ No message could be found for ID <c:out value="${requestContext.messageQuery.id}
                 <thead>
                     <tr>
                         <th colspan="2">
-                            Headers
+                            Headers				
                         </th>
                     </tr>
                 </thead>
@@ -99,7 +95,6 @@ No message could be found for ID <c:out value="${requestContext.messageQuery.id}
                 </tbody>
             </table>
         </td>
-
         <td  class="layout" valign="top">
             <table id="properties" class="sortable autostripe">
                 <thead>
@@ -116,6 +111,25 @@ No message could be found for ID <c:out value="${requestContext.messageQuery.id}
                             <td><c:out value="${prop.value}"/></td>
                         </tr>
                     </form:forEachMapEntry>
+					<jms:originalDestination originalDestination="${row.originalDestination}"/>
+					<c:if test="${ row.JMSDestination =='queue://ActiveMQ.DLQ'}">
+					<tr>
+						<td class="label">Recovery</td>
+						<td>
+							<a href="
+								<c:url value="moveMessage.action">
+									<c:param name="destination" value="${originalDestination}" />
+									<c:param name="JMSDestination" value="${requestContext.messageQuery.JMSDestination}" />
+									<c:param name="messageId" value="${row.JMSMessageID}" />
+									<c:param name="JMSDestinationType" value="queue" />
+									<c:param name="secret" value='${sessionScope["secret"]}' />
+								</c:url>" onclick="return confirm('Are you sure you want to Recovery this message on queue://<c:out value="${originalDestination}"/>?')"
+								title="Recovery to  queue://<c:out value="${originalDestination}" /> to attempt reprocessing">
+								Recovery
+							</a>
+						</td>
+                    </tr>                              
+					</c:if>
                 </tbody>
             </table>
         </td>
@@ -193,6 +207,9 @@ No message could be found for ID <c:out value="${requestContext.messageQuery.id}
                     <tr>
                         <td><div class="message"><pre class="prettyprint"><c:out value="${requestContext.messageQuery.body}"/></pre></div></td>
                     </tr>
+                    <tr>
+                        <td><div class="message"><pre class="prettyprint"><c:out value="${requestContext.messageQuery.getBodyToJSONString()}"/></pre></div></td>
+                    </tr>     
                 </tbody>
             </table>
         </td>

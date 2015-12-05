@@ -16,9 +16,11 @@
  */
 package org.apache.activemq.web;
 
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -27,6 +29,9 @@ import javax.jms.ObjectMessage;
 import javax.jms.QueueBrowser;
 import javax.jms.StreamMessage;
 import javax.jms.TextMessage;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Allow the user to browse a message on a queue by its ID
@@ -71,6 +76,27 @@ public class MessageQuery extends QueueBrowseQuery {
 
         }
         return message;
+    }
+    
+    public String getBodyToJSONString(){
+    	try {
+			Object o = this.getBody();
+			if(o!=null){
+				if(o instanceof String ){
+					return o.toString();
+				}else if(o instanceof Collection || o.getClass().isArray()){
+					return new JSONArray((Collection)o).toString();
+				}else if(o instanceof Object){
+					return new JSONObject(o).toString();
+				}else {
+					return o.toString();
+				}
+			}
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return "";
     }
 
     public Object getBody() throws JMSException {

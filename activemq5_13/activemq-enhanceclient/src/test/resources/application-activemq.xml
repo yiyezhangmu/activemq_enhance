@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.1.xsd
+    ">
+                     
+	<bean id="messageSendBean" class="com.mm.middle.activemq.impl.MessageSendBeanImpl"
+		init-method="init">
+		<property name="pooledConnectionFactory" ref="pooledConnectionFactory" />
+	</bean>
+
+	<bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+		destroy-method="stop">
+		<property name="connectionFactory">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="brokerURL">
+					<value>failover:(tcp://192.168.5.183:61616)?initialReconnectDelay=1000&amp;timeout=300000&amp;startupMaxReconnectAttempts=3</value>
+				</property>
+				<property name="redeliveryPolicy" ref="defalutRedeliveryPolicy" />
+			</bean>
+		</property>
+		<property name="maxConnections" value="2" />
+		<property name="maximumActiveSessionPerConnection" value="10" />
+	</bean>
+
+
+	<bean id="defalutRedeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">
+		<property name="maximumRedeliveries" value="3" />
+		<property name="backOffMultiplier" value="1" />
+		<property name="initialRedeliveryDelay" value="1000" />
+		<property name="redeliveryDelay" value="2000" />
+		<property name="useExponentialBackOff" value="true" />
+		<property name="useCollisionAvoidance" value="true" />
+	</bean>
+
+
+
+
+	<!-- 消费相关定义 -->
+	<bean id="testTransMessageListener" class="com.mm.test.activemq.TestTransMessageListener">
+		<property name="threadNum" value="1" />
+		<property name="destination" value="call-info" />
+		
+		
+		<property name="messageConsumeBean" ref="messageConsumeBean" />
+		
+	</bean>
+
+	<bean id="messageConsumeBean" class="com.mm.middle.activemq.impl.MessageConsumeBeanImpl">
+		<property name="pooledConnectionFactory" ref="pooledConnectionFactory" />
+	</bean>
+
+
+</beans>

@@ -14,6 +14,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
+
 <html>
 <head>
 <c:set var="pageTitle" value="Browse ${requestContext.queueBrowser.JMSDestination}"/>
@@ -65,7 +67,30 @@
 --%>
 </tbody>
 </table>
-
+<div>
+	<c:choose>
+		<c:when test="${empty prePage}">
+		</c:when>
+		<c:otherwise>
+			<a href="<c:url value="/graph.jsp">
+					 <c:param name="JMSDestination" value="${requestContext.queueBrowser.JMSDestination}" />
+					 <c:param name="page" value="${prePage}" />
+					 <c:param name="pageSize" value="${pageSize}" />
+				 </c:url>">上一页</a>
+		</c:otherwise>
+	</c:choose>
+	<c:choose>
+		<c:when test="${empty nextPage}">
+		</c:when>
+		<c:otherwise>
+		<a href="<c:url value="/graph.jsp">
+					 <c:param name="JMSDestination" value="${requestContext.queueBrowser.JMSDestination}" />
+					 <c:param name="page" value="${nextPage}" />
+					 <c:param name="pageSize" value="${pageSize}" />
+				 </c:url>">下一页</a>
+		</c:otherwise>
+	</c:choose>
+</div>
 <%@include file="decorators/footer.jsp" %>
 
 </body>

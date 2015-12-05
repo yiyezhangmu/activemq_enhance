@@ -39,6 +39,12 @@
   <bean name="/copyMessage.action" class="org.apache.activemq.web.controller.CopyMessage" autowire="constructor"  scope="prototype"/>	
   <bean name="/moveMessage.action" class="org.apache.activemq.web.controller.MoveMessage" autowire="constructor"  scope="prototype"/>
   <bean name="/deleteJob.action" class="org.apache.activemq.web.controller.DeleteJob" autowire="constructor"  scope="prototype"/>
+   <bean name="/batchMoveMessage.action" class="org.apache.activemq.web.controller.BatchMoveMessage" autowire="constructor" init-method="" scope="prototype"/>
+   <bean name="/dlqDeleteMessage.action" class="org.apache.activemq.web.controller.DLQDeleteMessage" autowire="constructor"  scope="prototype"/>
+   <bean name="/queueStatistics.do" class="org.apache.activemq.web.controller.QueueStatisticsQueryController" autowire="constructor"  scope="prototype">
+   <property name="queueStatisticsQuery" ref="queueStatisticsQuery"></property>
+   </bean>
+   
 
   <!--
     - This bean resolves specific types of exception to corresponding error views.

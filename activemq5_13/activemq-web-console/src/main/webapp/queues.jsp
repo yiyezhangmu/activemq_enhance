@@ -14,6 +14,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
+
 <html>
 <head>
 <c:set var="pageTitle" value="Queues"/>
@@ -49,6 +51,7 @@
 <th>Messages Dequeued</th>
 <th>Views</th>
 <th>Operations</th>
+<th>统计</th>
 </tr>
 </thead>
 <tbody>
@@ -84,6 +87,8 @@
                     <c:param name="JMSDestinationType" value="queue"   />
                     <c:param name="secret" value='${sessionScope["secret"]}'/></c:url>">Delete</a>
 </td>
+<td>	<a href="<c:url value="queueStatistics.jsp">
+                   <c:param name="JMSDestination" value="${row.name}" /></c:url>">统计</a></td>
 </tr>
 </c:forEach>
 </tbody>
@@ -93,4 +98,3 @@
 
 </body>
 </html>
-	

@@ -63,6 +63,7 @@ import org.apache.activemq.broker.region.group.MessageGroupMapFactory;
 import org.apache.activemq.broker.region.policy.DeadLetterStrategy;
 import org.apache.activemq.broker.region.policy.DispatchPolicy;
 import org.apache.activemq.broker.region.policy.RoundRobinDispatchPolicy;
+import org.apache.activemq.broker.statistics.QueryStatistics;
 import org.apache.activemq.broker.util.InsertionCountList;
 import org.apache.activemq.command.ActiveMQDestination;
 import org.apache.activemq.command.ConsumerId;
@@ -1742,7 +1743,7 @@ public class Queue extends BaseDestination implements Task, UsageListener, Index
         removeMessage(c, subs, r, ack);
     }
 
-    protected void removeMessage(ConnectionContext context, Subscription sub, final QueueMessageReference reference,
+	protected void removeMessage(ConnectionContext context, Subscription sub, final QueueMessageReference reference,
             MessageAck ack) throws IOException {
         LOG.trace("ack of {} with {}", reference.getMessageId(), ack);
         // This sends the ack the the journal..
@@ -1758,6 +1759,15 @@ public class Queue extends BaseDestination implements Task, UsageListener, Index
 
                     @Override
                     public void afterCommit() throws Exception {
+                     	//================by jeffrey
+                    	Message message = reference.getMessage();
+                    	
+                    	if(message!=null){
+                    		QueryStatistics
+    						.addConsumeOneQueue(message.getDestination());
+                    		
+                    	}
+                    	//by jeffrey ened
                         getDestinationStatistics().getDequeues().increment();
                         dropMessage(reference);
                         wakeup();
@@ -1765,6 +1775,15 @@ public class Queue extends BaseDestination implements Task, UsageListener, Index
 
                     @Override
                     public void afterRollback() throws Exception {
+                    	//================by jeffrey
+                    	Message message = reference.getMessage();
+                    	
+                    	if(message!=null){
+                    		QueryStatistics
+    						.addConsumeOneQueueFaile(message.getDestination());
+                    		
+                    	}
+                    	//by jeffrey ened
                         reference.setAcked(false);
                         wakeup();
                     }

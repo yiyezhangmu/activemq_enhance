@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%--
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
@@ -59,6 +60,9 @@
                             &#124;
                             <a href="<c:url value='/send.jsp'/>"
                                title="Send">Send</a>
+                            &#124;
+                            <a href="<c:url value='/dlqManage.jsp?JMSDestination=ActiveMQ.DLQ'/>"
+                               title="死信队列管理">死信队列管理</a>
                         </div>
                         <div id="site-quicklinks"><P>
                             <a href="http://activemq.apache.org/support.html"

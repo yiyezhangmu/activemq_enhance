@@ -14,21 +14,35 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 --%>
-<%@ attribute name="var" type="java.lang.String" required="true"  %>
-<%@ attribute name="queueBrowser" type="javax.jms.QueueBrowser" required="true"  %>
-<%@ tag import="java.util.Enumeration" %>
-<%@ tag import="javax.jms.Message" %>
+<%@tag import="org.apache.activemq.web.query.PageUtil"%>
+<%@tag import="org.apache.activemq.web.query.PageInfo"%>
+<%@tag import="java.util.ArrayList"%>
+<%@tag import="java.util.List"%>
+<%@ attribute name="var" type="java.lang.String" required="true"%>
+<%@ attribute name="queueBrowser" type="javax.jms.QueueBrowser"
+	required="true"%>
+<%@ tag import="java.util.Enumeration"%>
+<%@ tag import="javax.jms.Message"%>
 <%
-
 	Enumeration iter = queueBrowser.getEnumeration();
+	List<Message> list = new ArrayList<Message>();
 	while (iter.hasMoreElements()) {
-	    Message message = (Message) iter.nextElement();
-	    if (message != null) {
-	    		request.setAttribute(var, message);
-%>
-<jsp:doBody/>
-<%
-			}
+		Message message = (Message) iter.nextElement();
+		if (message != null) {
+			list.add(message);
+		}
 	}
-%>       
-    
+
+	if (null != list && list.size() > 0) {
+		PageInfo pageInfo = PageUtil.getPageInfoForList(list, request);
+		request.setAttribute("pageInfo", pageInfo);
+		for (int i = pageInfo.getStart(); i < pageInfo.getEnd(); i++) {
+
+			request.setAttribute(var, list.get(i));
+%>
+<jsp:doBody />
+<%
+	}
+	}
+%>
+

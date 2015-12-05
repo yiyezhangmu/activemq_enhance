@@ -14,6 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
 <html>
 <head>
 <c:set var="pageTitle" value="Browse ${requestContext.queueBrowser.JMSDestination}"/>
@@ -27,7 +28,37 @@
 
 
 <h2>Browse <form:tooltip text="${requestContext.queueBrowser.JMSDestination}"/></h2>
-
+<jms:forEachMessage queueBrowser="${requestContext.queueBrowser.browser}" var="row">
+</jms:forEachMessage>
+<c:choose>
+		<c:when test="${empty prePage}">
+		</c:when>
+		<c:otherwise>
+			<a href="<c:url value="/browse.jsp">
+					 <c:param name="JMSDestination" value="${requestContext.queueBrowser.JMSDestination}" />
+					 <c:param name="page" value="${prePage}" />
+					 <c:param name="pageSize" value="${pageSize}" />
+				 </c:url>">上一页</a>
+		</c:otherwise>
+	</c:choose>
+	<c:choose>
+		<c:when test="${empty nextPage}">
+		</c:when>
+		<c:otherwise>
+		<a href="<c:url value="/browse.jsp">
+					 <c:param name="JMSDestination" value="${requestContext.queueBrowser.JMSDestination}" />
+					 <c:param name="page" value="${nextPage}" />
+					 <c:param name="pageSize" value="${pageSize}" />
+				 </c:url>">下一页</a>
+		</c:otherwise>
+	</c:choose>
+	<c:choose>
+		<c:when test="${empty pageInfo}">
+		</c:when>
+		<c:otherwise>
+			当前为第${pageInfo.currPage}页 共${pageInfo.totalPage}页${pageInfo.totalCount}条数据
+		</c:otherwise>
+	</c:choose>
 <table id="messages" class="sortable autostripe">
 <thead>
 <tr>
@@ -91,9 +122,41 @@
 </jms:forEachMessage>
 </tbody>
 </table>
-
 <div>
-<a href="queueConsumers.jsp?JMSDestination=<c:out value="${requestContext.queueBrowser.JMSDestination}"/>">View Consumers</a>
+	<c:choose>
+		<c:when test="${empty prePage}">
+		</c:when>
+		<c:otherwise>
+			<a href="<c:url value="/browse.jsp">
+					 <c:param name="JMSDestination" value="${requestContext.queueBrowser.JMSDestination}" />
+					 <c:param name="page" value="${prePage}" />
+					 <c:param name="pageSize" value="${pageSize}" />
+				 </c:url>">上一页</a>
+		</c:otherwise>
+	</c:choose>
+	<c:choose>
+		<c:when test="${empty nextPage}">
+		</c:when>
+		<c:otherwise>
+		<a href="<c:url value="/browse.jsp">
+					 <c:param name="JMSDestination" value="${requestContext.queueBrowser.JMSDestination}" />
+					 <c:param name="page" value="${nextPage}" />
+					 <c:param name="pageSize" value="${pageSize}" />
+				 </c:url>">下一页</a>
+		</c:otherwise>
+	</c:choose>
+		<c:choose>
+		<c:when test="${empty pageInfo}">
+		</c:when>
+		<c:otherwise>
+			当前为第${pageInfo.currPage}页 共${pageInfo.totalPage}页${pageInfo.totalCount}条数据
+		</c:otherwise>
+	</c:choose>
+</div>
+<div>
+<a target="_blank" href="queueConsumers.jsp?JMSDestination=<c:out value="${requestContext.queueBrowser.JMSDestination}"/>">view customer</a>
+<a target="_blank" href="queueStatistics.jsp?JMSDestination=<c:out value="${requestContext.queueBrowser.JMSDestination}"/>">queue statistics</a>
+
 </div>
 
 <%@include file="decorators/footer.jsp" %>

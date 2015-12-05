@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.activemq.broker.ConnectionContext;
+import org.apache.activemq.broker.statistics.QueryStatistics;
 import org.apache.activemq.command.Message;
 import org.apache.activemq.command.MessageAck;
 import org.apache.activemq.command.MessageId;
@@ -100,10 +101,21 @@ public class MemoryTransactionStore implements TransactionStore {
                 for (Iterator<AddMessageCommand> iter = messages.iterator(); iter.hasNext();) {
                     AddMessageCommand cmd = iter.next();
                     cmd.run(ctx);
+                    Message messageSend=cmd.getMessage();
+                    // ================统计消息的创建数量======================new change by jeffrey
+                    //just  mark 可以在这个点 切入统计，创建的消息 by jeffrey
+                    
+    				QueryStatistics.addProduceOneQueue(messageSend.getDestination());
+	    			
                 }
-                // And removes..
+                // And removes.. delete
                 for (Iterator<RemoveMessageCommand> iter = acks.iterator(); iter.hasNext();) {
                     RemoveMessageCommand cmd = iter.next();
+                    MessageAck messageSend=cmd.getMessageAck();
+                    // ================统计消息的创建数量======================new change by jeffrey
+                    //just  mark 可以在这个点 切入统计成功消费的消息 by jeffrey
+                    //Queue.afterCommit() 已经记录
+    				//QueryStatistics.addConsumeOneQueue(messageSend.getDestination());
                     cmd.run(ctx);
                 }
 
@@ -169,6 +181,13 @@ public class MemoryTransactionStore implements TransactionStore {
             @Override
             public void removeAsyncMessage(ConnectionContext context, MessageAck ack) throws IOException {
                 MemoryTransactionStore.this.removeMessage(getDelegate(), ack);
+                ack.getDestination();
+                //jeffrey
+                System.out.println(11);
+                System.out.println(12);
+                System.out.println(13);
+                System.out.println(13);
+
             }
         };
         onProxyQueueStore(proxyMessageStore);
@@ -348,7 +367,7 @@ public class MemoryTransactionStore implements TransactionStore {
                 }
 
             });
-        } else {
+        } else { 
             destination.addMessage(context, message);
         }
     }

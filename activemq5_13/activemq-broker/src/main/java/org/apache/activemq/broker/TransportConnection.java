@@ -545,6 +545,19 @@ public class TransportConnection implements Connection, Task, CommandVisitor {
         ProducerBrokerExchange producerExchange = getProducerBrokerExchange(producerId);
         if (producerExchange.canDispatch(messageSend)) {
             broker.send(producerExchange, messageSend);
+
+			// =============已经废弃===统计消息的创建数量，不需用这个切入点======================new change by jeffrey
+			
+//			try {
+//				QueryStatistics
+//						.addProduceOneQueue(messageSend.getDestination());
+//				broker.send(producerExchange, messageSend);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				QueryStatistics.addProduceOneQueueFaile(messageSend
+//						.getDestination());
+//			}
         }
         return null;
     }

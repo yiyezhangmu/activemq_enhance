@@ -22,7 +22,7 @@
 		long time = Long.parseLong(timestamp);
 		Date date =  new Date(time);
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS z");		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		
 
 		out.println(formatter.format(date));
   	}

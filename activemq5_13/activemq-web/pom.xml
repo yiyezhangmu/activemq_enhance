@@ -52,6 +52,10 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>activemq-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>activemq-pool</artifactId>
     </dependency>
     <dependency>
@@ -93,7 +97,26 @@
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
     </dependency>
+   
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+    </dependency>
 
+    <dependency>
+       <groupId>com.oracle</groupId>
+       <artifactId>ojdbc14</artifactId>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.json</groupId>
+         <artifactId>json</artifactId>
+     </dependency>
+     <dependency>
+         <groupId>com.alibaba</groupId>
+         <artifactId>druid</artifactId>
+
+     </dependency>
     <!-- XML -->
     <dependency>
       <groupId>jdom</groupId>

@@ -140,6 +140,12 @@
         <include>org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec</include>
         <include>${pom.groupId}:activemq-web</include>
         <include>org.fusesource.hawtbuf:hawtbuf</include>
+
+        <!--db -->        
+        <include>mysql:mysql-connector-java</include>
+        <include>com.oracle:ojdbc14</include>
+        <include>com.alibaba:druid</include>
+        <include>org.json:json</include>
       </includes>
     </dependencySet>
     <dependencySet>
@@ -226,7 +232,7 @@
         <!-- insight log -->
         <include>io.fabric8.insight:insight-log-core</include>
         <include>io.fabric8.insight:insight-log4j</include>
-
+        
       </includes>
     </dependencySet>
     <dependencySet>
